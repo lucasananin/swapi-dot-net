@@ -1,0 +1,31 @@
+@model Swapi.Models.ViewModels.PlanetDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div class="details-grid">
+
+    <div class="detail-row">
+        <strong>Climate</strong>
+        <span>@Model.Climate</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Gravity</strong>
+        <span>@Model.Gravity</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Terrain</strong>
+        <span>@Model.Terrain</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Population</strong>
+        <span>@Model.Population</span>
+    </div>
+
+</div>

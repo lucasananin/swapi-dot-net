@@ -1,0 +1,50 @@
+@model Swapi.Models.ViewModels.ResourceListViewModel
+
+@{
+    ViewData["Title"] = Model.DisplayName;
+}
+
+<h1>@Model.DisplayName</h1>
+
+<form method="get" class="search-form">
+
+    <input type="text" name="search" value="@Model.Search" placeholder="Search..." />
+    <button type="submit"> Search </button>
+
+</form>
+
+@if (Model.Items.Any() == true)
+{
+    <ul>
+        @foreach (var item in Model.Items)
+        {
+            @* <li>@item.DisplayName</li> *@
+            <li>
+                @* <a asp-controller="Resources" asp-action="Details"
+        asp-route-resource="@Context.Request.RouteValues["resource"]" *@
+                <a asp-controller="Resources" asp-action="Details" asp-route-resource="@Model.Resource" asp-route-id="@item.Id">
+                    @item.DisplayName
+                </a>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    if (string.IsNullOrEmpty(Model.Search))
+    {
+        <p>No resources found</p>
+    }
+    else
+    {
+        <p>No @Model.DisplayName found matching "@Model.Search".</p>
+    }
+}
+
+@* <section class="hero">
+    <h1>@Model</h1>
+
+    <p>
+        This page will eventually display all @Model from SWAPI.
+    </p>
+</section> *@
