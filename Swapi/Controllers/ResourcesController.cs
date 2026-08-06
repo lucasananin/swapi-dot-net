@@ -18,7 +18,13 @@ public class ResourcesController(
             DisplayName = _displayName,
             Resource = resource,
             Search = search,
-            Items = resources
+            Items = resources,
+            Pagination = new()
+            {
+                CurrentPage = 1,
+                PageSize = 10,
+                TotalItems = resources.Count,
+            }
         };
 
         ViewData["Title"] = _displayName;
