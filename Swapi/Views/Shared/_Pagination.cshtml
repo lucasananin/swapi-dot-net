@@ -9,16 +9,16 @@
         </a>
     }
 
-    @foreach (var page in Model.GetVisiblePages())
+    @foreach (var _page in Model.GetVisiblePages())
     {
-        if (page == Model.CurrentPage)
+        if (_page == Model.CurrentPage)
         {
-            <strong>page</strong>
+            <strong>@_page</strong>
         }
         else
         {
-            <a asp-route-resource="@Model.Resource" asp-route-search="@Model.Search" asp-route-page="page">
-                page
+            <a asp-route-resource="@Model.Resource" asp-route-search="@Model.Search" asp-route-page="@_page">
+                @_page
             </a>
         }
     }
