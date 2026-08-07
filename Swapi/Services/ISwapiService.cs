@@ -1,4 +1,5 @@
 using Swapi.Models;
+using Swapi.Models.Services;
 using Swapi.Models.ViewModels;
 
 namespace Swapi.Services;
@@ -6,6 +7,6 @@ namespace Swapi.Services;
 public interface ISwapiService
 {
     Task<string> GetResourceDisplayNameAsync(string resource);
-    Task<List<ResourceItem>> GetResourceAsync(string resource, string? search = null);
+    Task<ResourceListResult> GetResourceAsync(string resource, string? search = null, int page = 1);
     Task<PersonDetailsViewModel?> GetPersonAsync(int id);
 }

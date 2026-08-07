@@ -8,23 +8,24 @@ public class ResourcesController(
     ISwapiService _swapiService,
     IResourceDetailsService _resourceDetailsService) : Controller
 {
-    public async Task<IActionResult> Index(string resource, string? search)
+    public async Task<IActionResult> Index(string resource, string? search, int page = 1)
     {
         string _displayName = await _swapiService.GetResourceDisplayNameAsync(resource);
-        var resources = await _swapiService.GetResourceAsync(resource, search);
+        var result = await _swapiService.GetResourceAsync(resource, search, page);
 
         var viewModel = new ResourceListViewModel
         {
             DisplayName = _displayName,
             Resource = resource,
             Search = search,
-            Items = resources,
-            Pagination = new()
-            {
-                CurrentPage = 1,
-                PageSize = 10,
-                TotalItems = resources.Count,
-            }
+            Items = result.Items,
+            Pagination = result.Pagination,
+            // Pagination = new()
+            // {
+            //     CurrentPage = 1,
+            //     PageSize = 10,
+            //     TotalItems = result.Count,
+            // }
         };
 
         ViewData["Title"] = _displayName;

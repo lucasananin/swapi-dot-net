@@ -1,6 +1,8 @@
 using System.Text.Json;
+using Swapi.Constants;
 using Swapi.Models;
 using Swapi.Models.Api;
+using Swapi.Models.Services;
 using Swapi.Models.ViewModels;
 
 namespace Swapi.Services;
@@ -9,7 +11,7 @@ public class SwapiService(
     HttpClient httpClient,
     ILogger<SwapiService> logger) : ISwapiService
 {
-    public async Task<List<ResourceItem>> GetResourceAsync(string resource, string? search = null)
+    public async Task<ResourceListResult> GetResourceAsync(string resource, string? search = null, int page = 1)
     {
         // var response = await httpClient.GetAsync(resource);
         // response.EnsureSuccessStatusCode();
@@ -20,49 +22,53 @@ public class SwapiService(
         try
         {
             var stream = await httpClient.GetStreamAsync(resource);
+            var list = new List<ResourceItem>();
 
             if (resource == "films")
             {
                 var films = await JsonSerializer.DeserializeAsync<List<TitledApiResource>>(stream);
-                // return films?.Select(
-                //     f => new ResourceItem
-                //     {
-                //         Id = ExtractId(f.Url),
-                //         DisplayName = f.Title,
-                //         Url = f.Url
-                //     }).ToList() ?? [];
-                var list = films?.Select(
-                    f => new ResourceItem
-                    {
-                        Id = ExtractId(f.Url),
-                        DisplayName = f.Title,
-                        Url = f.Url
-                    }).ToList() ?? [];
-
-                TrySortSearch(ref list, search);
-                // if (!string.IsNullOrWhiteSpace(search))
-                // {
-                //     list = [.. list
-                //         .Where(item =>
-                //             item.DisplayName.Contains(
-                //                 search,
-                //                 StringComparison.OrdinalIgnoreCase))];
-                // }
-                return list;
+                list = films?.Select(
+                   f => new ResourceItem
+                   {
+                       Id = ExtractId(f.Url),
+                       DisplayName = f.Title,
+                       Url = f.Url
+                   }).ToList() ?? [];
+                // TrySortSearch(ref list, search);
+                // return list;
             }
             else
             {
                 var resources = await JsonSerializer.DeserializeAsync<List<NamedApiResource>>(stream);
-                var list = resources?.Select(
-                    r => new ResourceItem
-                    {
-                        Id = ExtractId(r.Url),
-                        DisplayName = r.Name,
-                        Url = r.Url
-                    }).ToList() ?? [];
-                TrySortSearch(ref list, search);
-                return list;
+                list = resources?.Select(
+                   r => new ResourceItem
+                   {
+                       Id = ExtractId(r.Url),
+                       DisplayName = r.Name,
+                       Url = r.Url
+                   }).ToList() ?? [];
+                // TrySortSearch(ref list, search);
+                // return list;
             }
+
+            ApplySearchFilter(ref list, search);
+
+            page = Math.Max(page, 1);
+            var totalItems = list.Count;
+            var pagedItems = list.Skip((page - 1) * Paging.DEFAULT_PAGE_SIZE).Take(Paging.DEFAULT_PAGE_SIZE).ToList();
+
+            return new ResourceListResult
+            {
+                Items = pagedItems,
+
+                Pagination = new PaginationViewModel
+                {
+                    CurrentPage = page,
+                    PageSize = Paging.DEFAULT_PAGE_SIZE,
+                    TotalItems = totalItems
+                }
+            };
+            // return list;
         }
         catch (HttpRequestException ex)
         {
@@ -71,11 +77,11 @@ public class SwapiService(
                 "Unable to retrieve resource list for {Resource}",
                 resource);
 
-            return [];
+            return null;
         }
     }
 
-    private static void TrySortSearch(ref List<ResourceItem> list, string search)
+    private static void ApplySearchFilter(ref List<ResourceItem> list, string search)
     {
         if (!string.IsNullOrWhiteSpace(search))
         {
