@@ -43,9 +43,12 @@ public class SwapiService(
 
             ApplySearchFilter(ref list, search);
 
-            page = Math.Max(page, 1);
+            // page = Math.Max(page, 1);
+            var totalPages = (int)Math.Ceiling(list.Count / (double)Paging.DEFAULT_PAGE_SIZE);
+            var clampedCurrentPage = list.Count > 0 ? Math.Clamp(page, 1, totalPages) : 1;
+
             var totalItems = list.Count;
-            var pagedItems = list.Skip((page - 1) * Paging.DEFAULT_PAGE_SIZE).Take(Paging.DEFAULT_PAGE_SIZE).ToList();
+            var pagedItems = list.Skip((clampedCurrentPage - 1) * Paging.DEFAULT_PAGE_SIZE).Take(Paging.DEFAULT_PAGE_SIZE).ToList();
 
             return new ResourceListResult
             {
@@ -53,7 +56,7 @@ public class SwapiService(
 
                 Pagination = new PaginationViewModel
                 {
-                    CurrentPage = page,
+                    CurrentPage = clampedCurrentPage,
                     PageSize = Paging.DEFAULT_PAGE_SIZE,
                     TotalItems = totalItems
                 }
