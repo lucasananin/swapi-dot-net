@@ -112,34 +112,31 @@ body {
   cursor: pointer;
 }
 
-/* html {
-  font-size: 14px;
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+.pagination a,
+.pagination strong {
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+.pagination a {
+  text-decoration: none;
+  color: white;
+  background: #2d3748;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+.pagination a:hover {
+  background: #4a5568;
 }
 
-body {
-  margin-bottom: 60px;
+.pagination strong {
+  background: #2563eb;
 }
-
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-} */

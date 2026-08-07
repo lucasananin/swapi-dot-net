@@ -13,19 +13,22 @@ public class ResourcesController(
         string _displayName = await _swapiService.GetResourceDisplayNameAsync(resource);
         var result = await _swapiService.GetResourceAsync(resource, search, page);
 
+        var clampedCurrentPage = result.Items.Count > 0 ? Math.Clamp(result.Pagination.CurrentPage, 1, result.Pagination.TotalPages) : 1;
         var viewModel = new ResourceListViewModel
         {
             DisplayName = _displayName,
             Resource = resource,
             Search = search,
             Items = result.Items,
-            Pagination = result.Pagination,
-            // Pagination = new()
-            // {
-            //     CurrentPage = 1,
-            //     PageSize = 10,
-            //     TotalItems = result.Count,
-            // }
+            Pagination = new()
+            {
+                // CurrentPage = result.Pagination.CurrentPage,
+                CurrentPage = clampedCurrentPage,
+                PageSize = result.Pagination.PageSize,
+                TotalItems = result.Pagination.TotalItems,
+                Resource = resource,
+                Search = search
+            }
         };
 
         ViewData["Title"] = _displayName;
@@ -34,16 +37,10 @@ public class ResourcesController(
 
     public async Task<IActionResult> Details(string resource, int id)
     {
-        // return Content(
-        //     $"Resource: {resource}\nId: {id}",
-        //     "text/plain");
-        // if (resource != "people") return NotFound();
-
         var result = await _resourceDetailsService.GetDetailsAsync(resource, id);
         if (result is null) return NotFound();
 
         ViewData["Title"] = result.PageTitle;
         return View(result.ViewName, result.Model);
-        // return View("PersonDetails", result.Model);
     }
 }

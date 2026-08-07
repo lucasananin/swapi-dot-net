@@ -18,10 +18,7 @@
     <ul>
         @foreach (var item in Model.Items)
         {
-            @* <li>@item.DisplayName</li> *@
             <li>
-                @* <a asp-controller="Resources" asp-action="Details"
-        asp-route-resource="@Context.Request.RouteValues["resource"]" *@
                 <a asp-controller="Resources" asp-action="Details" asp-route-resource="@Model.Resource" asp-route-id="@item.Id">
                     @item.DisplayName
                 </a>
@@ -40,13 +37,5 @@ else
         <p>No @Model.DisplayName found matching "@Model.Search".</p>
     }
 }
-
-@* <section class="hero">
-    <h1>@Model</h1>
-
-    <p>
-        This page will eventually display all @Model from SWAPI.
-    </p>
-</section> *@
 
 <partial name="_Pagination" model="Model.Pagination" />

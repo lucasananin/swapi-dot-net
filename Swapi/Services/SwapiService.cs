@@ -13,12 +13,6 @@ public class SwapiService(
 {
     public async Task<ResourceListResult> GetResourceAsync(string resource, string? search = null, int page = 1)
     {
-        // var response = await httpClient.GetAsync(resource);
-        // response.EnsureSuccessStatusCode();
-        // var stream = await response.Content.ReadAsStreamAsync();
-        // var resources = await JsonSerializer.DeserializeAsync<List<ResourceItem>>(stream);
-        // return resources ?? [];
-
         try
         {
             var stream = await httpClient.GetStreamAsync(resource);
@@ -34,8 +28,6 @@ public class SwapiService(
                        DisplayName = f.Title,
                        Url = f.Url
                    }).ToList() ?? [];
-                // TrySortSearch(ref list, search);
-                // return list;
             }
             else
             {
@@ -47,8 +39,6 @@ public class SwapiService(
                        DisplayName = r.Name,
                        Url = r.Url
                    }).ToList() ?? [];
-                // TrySortSearch(ref list, search);
-                // return list;
             }
 
             ApplySearchFilter(ref list, search);
@@ -68,7 +58,6 @@ public class SwapiService(
                     TotalItems = totalItems
                 }
             };
-            // return list;
         }
         catch (HttpRequestException ex)
         {

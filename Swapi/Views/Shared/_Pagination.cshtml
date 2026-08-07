@@ -1,27 +1,33 @@
-@* @model Swapi.Models.ViewModels.PaginationViewModel
-
-<div class="pagination">
-    <span>
-        Page @Model.CurrentPage of @Model.TotalPages
-    </span>
-</div> *@
-
 @model Swapi.Models.ViewModels.PaginationViewModel
 
 <nav class="pagination">
 
     @if (Model.HasPrevious)
     {
-        <a asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+        <a asp-route-resource="@Model.Resource" asp-route-search="@Model.Search" asp-route-page="@(Model.CurrentPage - 1)">
+            Previous
+        </a>
     }
 
-    <span>
-        Page @Model.CurrentPage of @Model.TotalPages
-    </span>
+    @foreach (var page in Model.GetVisiblePages())
+    {
+        if (page == Model.CurrentPage)
+        {
+            <strong>page</strong>
+        }
+        else
+        {
+            <a asp-route-resource="@Model.Resource" asp-route-search="@Model.Search" asp-route-page="page">
+                page
+            </a>
+        }
+    }
 
     @if (Model.HasNext)
     {
-        <a asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+        <a asp-route-resource="@Model.Resource" asp-route-search="@Model.Search" asp-route-page="@(Model.CurrentPage + 1)">
+            Next
+        </a>
     }
 
 </nav>
