@@ -23,6 +23,7 @@ builder.Services.AddHttpClient<IPlanetService, PlanetService>(client =>
 });
 builder.Services.AddScoped<IResourceDetailsService, ResourceDetailsService>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=favorites.db"));
+builder.Services.AddScoped<IFavoriteService, FavoriteService>();
 
 var app = builder.Build();
 
