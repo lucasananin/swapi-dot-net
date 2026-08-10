@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using Swapi.Data;
 using Swapi.Services;
 using Swapi.Services.People;
 using Swapi.Services.Planets;
@@ -20,6 +22,7 @@ builder.Services.AddHttpClient<IPlanetService, PlanetService>(client =>
     client.BaseAddress = new Uri(swapiLink);
 });
 builder.Services.AddScoped<IResourceDetailsService, ResourceDetailsService>();
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=favorites.db"));
 
 var app = builder.Build();
 
