@@ -1,0 +1,25 @@
+@model Swapi.Models.ViewModels.FavoritesViewModel
+
+<h1>Favorites</h1>
+
+@if (Model.Items.Count == 0)
+{
+    <p>You don't have any favorites yet.</p>
+}
+else
+{
+    <ul>
+        @foreach (var item in Model.Items)
+        {
+            <li>
+                <a asp-action="Details" asp-route-resource="@item.Resource" asp-route-id="@item.Id">
+                    @item.Name
+                </a>
+
+                <span>
+                    (@item.Resource)
+                </span>
+            </li>
+        }
+    </ul>
+}

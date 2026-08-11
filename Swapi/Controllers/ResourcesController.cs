@@ -13,7 +13,7 @@ public class ResourcesController(
     public async Task<IActionResult> Index(string resource, string? search, int page = 1)
     {
         string _displayName = await _swapiService.GetResourceDisplayNameAsync(resource);
-        var result = await _swapiService.GetResourceAsync(resource, search, page);
+        var result = await _swapiService.GetResourcesAsync(resource, search, page);
 
         var clampedCurrentPage = result.Items.Count > 0 ? Math.Clamp(result.Pagination.CurrentPage, 1, result.Pagination.TotalPages) : 1;
         var viewModel = new ResourceListViewModel
@@ -45,6 +45,7 @@ public class ResourcesController(
         return View(result.ViewName, result.Model);
     }
 
+    // [HttpPost("resources/{resource}/{id}/favorite")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> ToggleFavorite(string resource, int id)
@@ -61,5 +62,34 @@ public class ResourcesController(
             resource,
             id,
         });
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> Favorites()
+    {
+        var favorites = await favoriteService.GetAllAsync();
+
+        var items = new List<FavoriteItemViewModel>();
+
+        foreach (var favorite in favorites)
+        {
+            var resource = await _swapiService.GetResourceAsync(favorite.ResourceType, favorite.ResourceId);
+
+            if (resource is null) continue;
+
+            items.Add(new FavoriteItemViewModel
+            {
+                Id = favorite.ResourceId,
+                Resource = favorite.ResourceType,
+                Name = resource.DisplayName
+            });
+        }
+
+        var model = new FavoritesViewModel
+        {
+            Items = items
+        };
+
+        return View(model);
     }
 }

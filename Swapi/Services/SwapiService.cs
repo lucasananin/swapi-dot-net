@@ -11,7 +11,7 @@ public class SwapiService(
     HttpClient httpClient,
     ILogger<SwapiService> logger) : ISwapiService
 {
-    public async Task<ResourceListResult> GetResourceAsync(string resource, string? search = null, int page = 1)
+    public async Task<ResourceListResult> GetResourcesAsync(string resource, string? search = null, int page = 1)
     {
         try
         {
@@ -71,6 +71,35 @@ public class SwapiService(
 
             return null;
         }
+    }
+
+    public async Task<ResourceItem?> GetResourceAsync(string resource, int id)
+    {
+        var response = await httpClient.GetAsync($"{resource}/{id}");
+
+        if (!response.IsSuccessStatusCode) return null;
+        
+        if (resource == "films")
+        {
+            var film = await response.Content.ReadFromJsonAsync<TitledApiResource>();
+            return new ResourceItem
+            {
+                Id = id,
+                DisplayName = film.Title,
+                Url = film.Url,
+            };
+        }
+        else
+        {
+            var r = await response.Content.ReadFromJsonAsync<NamedApiResource>();
+            return new ResourceItem
+            {
+                Id = id,
+                DisplayName = r.Name,
+                Url = r.Url,
+            };
+        }
+        // return await response.Content.ReadFromJsonAsync<ResourceItem>();
     }
 
     private static void ApplySearchFilter(ref List<ResourceItem> list, string search)

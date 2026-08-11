@@ -7,6 +7,7 @@ namespace Swapi.Services;
 public interface ISwapiService
 {
     Task<string> GetResourceDisplayNameAsync(string resource);
-    Task<ResourceListResult> GetResourceAsync(string resource, string? search = null, int page = 1);
+    Task<ResourceListResult> GetResourcesAsync(string resource, string? search = null, int page = 1);
     Task<PersonDetailsViewModel?> GetPersonAsync(int id);
+    Task<ResourceItem?> GetResourceAsync(string resource, int id);
 }
