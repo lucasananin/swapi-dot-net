@@ -24,7 +24,6 @@ public class ResourcesController(
             Items = result.Items,
             Pagination = new()
             {
-                // CurrentPage = result.Pagination.CurrentPage,
                 CurrentPage = clampedCurrentPage,
                 PageSize = result.Pagination.PageSize,
                 TotalItems = result.Pagination.TotalItems,
@@ -48,23 +47,18 @@ public class ResourcesController(
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> ToggleFavorite(int id)
+    public async Task<IActionResult> ToggleFavorite(string resource, int id)
     {
-        var isFavorite = await favoriteService.IsFavoriteAsync("people", id);
+        var isFavorite = await favoriteService.IsFavoriteAsync(resource, id);
 
         if (isFavorite)
-        {
-            await favoriteService.RemoveAsync("people", id);
-        }
+            await favoriteService.RemoveAsync(resource, id);
         else
-        {
-            await favoriteService.AddAsync("people", id);
-        }
+            await favoriteService.AddAsync(resource, id);
 
-        // return RedirectToAction(nameof(Details), new { id });
         return RedirectToAction(nameof(Details), new
         {
-            resource = "people",
+            resource,
             id,
         });
     }

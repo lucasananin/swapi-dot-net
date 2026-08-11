@@ -1,6 +1,6 @@
 namespace Swapi.Models.ViewModels;
 
-public class PlanetDetailsViewModel
+public class PlanetDetailsViewModel : ResourceDetailsViewModel
 {
     public string Name { get; init; } = string.Empty;
     public string Population { get; init; } = string.Empty;
