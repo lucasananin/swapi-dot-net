@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
 var swapiLink = "https://swapi.info/api/";
 builder.Services.AddHttpClient<ISwapiService, SwapiService>(client =>
 {
@@ -21,6 +22,7 @@ builder.Services.AddHttpClient<IPlanetService, PlanetService>(client =>
 {
     client.BaseAddress = new Uri(swapiLink);
 });
+
 builder.Services.AddScoped<IResourceDetailsService, ResourceDetailsService>();
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=favorites.db"));
 builder.Services.AddScoped<IFavoriteService, FavoriteService>();

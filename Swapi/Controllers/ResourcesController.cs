@@ -6,8 +6,10 @@ namespace Swapi.Controllers;
 
 public class ResourcesController(
     ISwapiService _swapiService,
+    IFavoriteService favoriteService,
     IResourceDetailsService _resourceDetailsService) : Controller
 {
+    [HttpGet]
     public async Task<IActionResult> Index(string resource, string? search, int page = 1)
     {
         string _displayName = await _swapiService.GetResourceDisplayNameAsync(resource);
@@ -42,5 +44,28 @@ public class ResourcesController(
 
         ViewData["Title"] = result.PageTitle;
         return View(result.ViewName, result.Model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> ToggleFavorite(int id)
+    {
+        var isFavorite = await favoriteService.IsFavoriteAsync("people", id);
+
+        if (isFavorite)
+        {
+            await favoriteService.RemoveAsync("people", id);
+        }
+        else
+        {
+            await favoriteService.AddAsync("people", id);
+        }
+
+        // return RedirectToAction(nameof(Details), new { id });
+        return RedirectToAction(nameof(Details), new
+        {
+            resource = "people",
+            id,
+        });
     }
 }

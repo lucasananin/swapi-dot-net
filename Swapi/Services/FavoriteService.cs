@@ -38,7 +38,6 @@ public class FavoriteService(AppDbContext dbContext) : IFavoriteService
         };
 
         dbContext.Favorites.Add(favorite);
-
         await dbContext.SaveChangesAsync();
     }
 

@@ -5,6 +5,7 @@ namespace Swapi.Services.People;
 
 public class PersonService(
     HttpClient httpClient,
+    IFavoriteService favoriteService,
     ILogger<PersonService> logger) : IPersonService
 {
     public async Task<PersonDetailsViewModel?> GetByIdAsync(int id)
@@ -19,13 +20,17 @@ public class PersonService(
                 return null;
             }
 
+            var isFavorite = await favoriteService.IsFavoriteAsync("people", id);
+
             return new PersonDetailsViewModel
             {
+                Id = id,
                 Name = person.Name,
                 Height = person.Height,
                 Mass = person.Mass,
                 BirthYear = person.BirthYear,
-                Gender = person.Gender
+                Gender = person.Gender,
+                IsFavorite = isFavorite,
             };
         }
         catch (HttpRequestException ex)
