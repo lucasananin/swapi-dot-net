@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
 using Swapi.Constants;
 using Swapi.Models;
 using Swapi.Models.Api;
@@ -9,37 +10,43 @@ namespace Swapi.Services;
 
 public class SwapiService(
     HttpClient httpClient,
+    IMemoryCache memoryCache,
     ILogger<SwapiService> logger) : ISwapiService
 {
     public async Task<ResourceListResult> GetResourcesAsync(string resource, string? search = null, int page = 1)
     {
         try
         {
-            var stream = await httpClient.GetStreamAsync(resource);
-            var list = new List<ResourceItem>();
+            var cacheKey = $"swapi:resources:{resource}";
 
-            if (resource == "films")
+            var list = await memoryCache.GetOrCreateAsync(cacheKey, async entry =>
             {
-                var films = await JsonSerializer.DeserializeAsync<List<TitledApiResource>>(stream);
-                list = films?.Select(
-                   f => new ResourceItem
-                   {
-                       Id = ExtractId(f.Url),
-                       DisplayName = f.Title,
-                       Url = f.Url
-                   }).ToList() ?? [];
-            }
-            else
-            {
-                var resources = await JsonSerializer.DeserializeAsync<List<NamedApiResource>>(stream);
-                list = resources?.Select(
-                   r => new ResourceItem
-                   {
-                       Id = ExtractId(r.Url),
-                       DisplayName = r.Name,
-                       Url = r.Url
-                   }).ToList() ?? [];
-            }
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                var stream = await httpClient.GetStreamAsync(resource);
+
+                if (resource == "films")
+                {
+                    var films = await JsonSerializer.DeserializeAsync<List<TitledApiResource>>(stream);
+                    return films?.Select(
+                       f => new ResourceItem
+                       {
+                           Id = ExtractId(f.Url),
+                           DisplayName = f.Title,
+                           Url = f.Url
+                       }).ToList() ?? [];
+                }
+                else
+                {
+                    var resources = await JsonSerializer.DeserializeAsync<List<NamedApiResource>>(stream);
+                    return resources?.Select(
+                       r => new ResourceItem
+                       {
+                           Id = ExtractId(r.Url),
+                           DisplayName = r.Name,
+                           Url = r.Url
+                       }).ToList() ?? [];
+                }
+            });
 
             ApplySearchFilter(ref list, search);
 
@@ -75,31 +82,36 @@ public class SwapiService(
 
     public async Task<ResourceItem?> GetResourceAsync(string resource, int id)
     {
-        var response = await httpClient.GetAsync($"{resource}/{id}");
+        var cacheKey = $"swapi:resource:{resource}:{id}";
+        if (memoryCache.TryGetValue(cacheKey, out ResourceItem? cachedResource)) return cachedResource;
 
+        var response = await httpClient.GetAsync($"{resource}/{id}");
         if (!response.IsSuccessStatusCode) return null;
-        
+
         if (resource == "films")
         {
-            var film = await response.Content.ReadFromJsonAsync<TitledApiResource>();
-            return new ResourceItem
+            var apiModel = await response.Content.ReadFromJsonAsync<TitledApiResource>();
+            var item = new ResourceItem
             {
                 Id = id,
-                DisplayName = film.Title,
-                Url = film.Url,
+                DisplayName = apiModel.Title,
+                Url = apiModel.Url,
             };
+            memoryCache.Set(cacheKey, item, TimeSpan.FromMinutes(10));
+            return item;
         }
         else
         {
-            var r = await response.Content.ReadFromJsonAsync<NamedApiResource>();
-            return new ResourceItem
+            var apiModel = await response.Content.ReadFromJsonAsync<NamedApiResource>();
+            var item = new ResourceItem
             {
                 Id = id,
-                DisplayName = r.Name,
-                Url = r.Url,
+                DisplayName = apiModel.Name,
+                Url = apiModel.Url,
             };
+            memoryCache.Set(cacheKey, item, TimeSpan.FromMinutes(10));
+            return item;
         }
-        // return await response.Content.ReadFromJsonAsync<ResourceItem>();
     }
 
     private static void ApplySearchFilter(ref List<ResourceItem> list, string search)
