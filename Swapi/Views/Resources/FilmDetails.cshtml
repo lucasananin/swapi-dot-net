@@ -1,0 +1,26 @@
+@model Swapi.Models.ViewModels.FilmDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h1>@Model.Title</h1>
+
+<div class="details-grid">
+
+    <div class="detail-row">
+        <strong>Director</strong>
+        <span>@Model.Director</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Producer</strong>
+        <span>@Model.Producer</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Release Date</strong>
+        <span>@Model.ReleaseDate</span>
+    </div>
+
+</div>

@@ -1,4 +1,5 @@
 using Swapi.Models.ViewModels;
+using Swapi.Services.Films;
 using Swapi.Services.People;
 using Swapi.Services.Planets;
 
@@ -6,7 +7,8 @@ namespace Swapi.Services;
 
 public class ResourceDetailsService(
     IPersonService _personService,
-    IPlanetService planetService) : IResourceDetailsService
+    IPlanetService planetService,
+    IFilmService filmService) : IResourceDetailsService
 {
     public async Task<ResourceDetailsResult> GetDetailsAsync(string resource, int id)
     {
@@ -24,6 +26,7 @@ public class ResourceDetailsService(
                 };
 
             case "planets":
+
                 var planet = await planetService.GetByIdAsync(id);
                 if (planet is null) return null;
                 return new ResourceDetailsResult
@@ -31,6 +34,15 @@ public class ResourceDetailsService(
                     ViewName = "PlanetDetails",
                     Model = planet,
                     PageTitle = planet.Name
+                };
+
+            case "films":
+                var film = await filmService.GetByIdAsync(id);
+                return new ResourceDetailsResult
+                {
+                    ViewName = "FilmDetails",
+                    Model = film,
+                    PageTitle = film.Title,
                 };
 
             default:

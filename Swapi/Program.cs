@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Swapi.Data;
 using Swapi.Services;
+using Swapi.Services.Films;
 using Swapi.Services.People;
 using Swapi.Services.Planets;
 
@@ -10,18 +11,22 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 
-var swapiLink = "https://swapi.info/api/";
+const string SWAPI_LINK = "https://swapi.info/api/";
 builder.Services.AddHttpClient<ISwapiService, SwapiService>(client =>
 {
-    client.BaseAddress = new Uri(swapiLink);
+    client.BaseAddress = new Uri(SWAPI_LINK);
 });
 builder.Services.AddHttpClient<IPersonService, PersonService>(client =>
 {
-    client.BaseAddress = new Uri(swapiLink);
+    client.BaseAddress = new Uri(SWAPI_LINK);
 });
 builder.Services.AddHttpClient<IPlanetService, PlanetService>(client =>
 {
-    client.BaseAddress = new Uri(swapiLink);
+    client.BaseAddress = new Uri(SWAPI_LINK);
+});
+builder.Services.AddHttpClient<IFilmService, FilmService>(client =>
+{
+    client.BaseAddress = new Uri(SWAPI_LINK);
 });
 
 builder.Services.AddScoped<IResourceDetailsService, ResourceDetailsService>();
