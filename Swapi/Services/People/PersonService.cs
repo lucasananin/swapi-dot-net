@@ -25,12 +25,12 @@ public class PersonService(
             return new PersonDetailsViewModel
             {
                 Id = id,
+                IsFavorite = isFavorite,
                 Name = person.Name,
                 Height = person.Height,
                 Mass = person.Mass,
                 BirthYear = person.BirthYear,
                 Gender = person.Gender,
-                IsFavorite = isFavorite,
             };
         }
         catch (HttpRequestException ex)

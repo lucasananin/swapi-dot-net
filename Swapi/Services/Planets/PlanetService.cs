@@ -5,6 +5,7 @@ namespace Swapi.Services.Planets;
 
 public class PlanetService(
     HttpClient httpClient,
+    IFavoriteService favoriteService,
     ILogger<PlanetService> logger) : IPlanetService
 {
     public async Task<PlanetDetailsViewModel?> GetByIdAsync(int id)
@@ -19,8 +20,12 @@ public class PlanetService(
                 return null;
             }
 
+            var isFavorite = await favoriteService.IsFavoriteAsync("planets", id);
+
             return new PlanetDetailsViewModel
             {
+                Id = id,
+                IsFavorite = isFavorite,
                 Name = _planet.Name,
                 Population = _planet.Population,
                 Terrain = _planet.Terrain,
