@@ -30,7 +30,12 @@
 
 </div>
 
-<form asp-controller="Resources" asp-action="ToggleFavorite" method="post">
+<partial name="_FavoriteButton" model="@Model" view-data='new ViewDataDictionary(ViewData)
+         {
+             ["Resource"] = "people"
+         }' />
+
+@* <form asp-controller="Resources" asp-action="ToggleFavorite" method="post">
 
     <input type="hidden" name="resource" value="people" />
     <input type="hidden" name="id" value="@Model.Id" />
@@ -39,4 +44,4 @@
         @(Model.IsFavorite ? "★ Remove from favorites" : "☆ Add to favorites")
     </button>
 
-</form>
+</form> *@
