@@ -35,7 +35,6 @@ public static class ServiceExtensions
 
     public static IServiceCollection AddOtherServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=favorites.db"));
         services.AddDbContext<AppDbContext>(options => options.UseSqlite(configuration.GetConnectionString("DefaultConnection")));
         services.AddScoped<IResourceDetailsService, ResourceDetailsService>();
         services.AddScoped<IFavoriteService, FavoriteService>();
