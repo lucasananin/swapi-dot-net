@@ -1,0 +1,36 @@
+@model Swapi.Models.ViewModels.SpecieDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div class="details-grid">
+
+    <div class="detail-row">
+        <strong>Classification</strong>
+        <span>@Model.Classification</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Average Height</strong>
+        <span>@Model.AverageHeight</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Average Lifespan</strong>
+        <span>@Model.AverageLifespan</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Language</strong>
+        <span>@Model.Language</span>
+    </div>
+
+</div>
+
+<partial name="_FavoriteButton" model="@Model" view-data='new ViewDataDictionary(ViewData)
+         {
+             ["Resource"] = "species"
+         }' />
