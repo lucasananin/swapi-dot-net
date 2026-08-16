@@ -1,0 +1,37 @@
+@using Swapi.Constants
+@model Swapi.Models.ViewModels.VehicleDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div class="details-grid">
+
+    <div class="detail-row">
+        <strong>Model</strong>
+        <span>@Model.Model</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Manufacturer</strong>
+        <span>@Model.Manufacturer</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Cost in Credits</strong>
+        <span>@Model.CostInCredits</span>
+    </div>
+
+    <div class="detail-row">
+        <strong>Vehicle Class</strong>
+        <span>@Model.VehicleClass</span>
+    </div>
+
+</div>
+
+<partial name="_FavoriteButton" model="@Model" view-data='new ViewDataDictionary(ViewData)
+         {
+             ["Resource"] = Resources.VEHICLES
+         }' />

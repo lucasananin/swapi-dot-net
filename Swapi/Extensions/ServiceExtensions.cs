@@ -5,6 +5,7 @@ using Swapi.Services.Films;
 using Swapi.Services.People;
 using Swapi.Services.Planets;
 using Swapi.Services.Species;
+using Swapi.Services.Vehicles;
 
 namespace Swapi.Extensions;
 
@@ -31,6 +32,10 @@ public static class ServiceExtensions
             client.BaseAddress = new Uri(SWAPI_LINK);
         });
         services.AddHttpClient<ISpecieService, SpecieService>(client =>
+        {
+            client.BaseAddress = new Uri(SWAPI_LINK);
+        });
+        services.AddHttpClient<IVehicleService, VehicleService>(client =>
         {
             client.BaseAddress = new Uri(SWAPI_LINK);
         });
