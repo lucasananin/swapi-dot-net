@@ -1,3 +1,4 @@
+using Swapi.Constants;
 using Swapi.Models.Api;
 using Swapi.Models.ViewModels;
 
@@ -9,8 +10,8 @@ public class VehicleService(
 {
     public async Task<VehicleDetailsViewModel> GetByIdAsync(int id)
     {
-        var vehicle = await httpClient.GetFromJsonAsync<VehicleApiModel>($"vehicles/{id}");
-        var isFavorite = await favoriteService.IsFavoriteAsync("vehicles", id);
+        var vehicle = await httpClient.GetFromJsonAsync<VehicleApiModel>($"{Resources.VEHICLES}/{id}");
+        var isFavorite = await favoriteService.IsFavoriteAsync(Resources.VEHICLES, id);
 
         return new VehicleDetailsViewModel
         {

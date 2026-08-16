@@ -1,3 +1,4 @@
+using Swapi.Constants;
 using Swapi.Models.ViewModels;
 using Swapi.Services.Films;
 using Swapi.Services.People;
@@ -18,7 +19,7 @@ public class ResourceDetailsService(
     {
         switch (resource)
         {
-            case "people":
+            case Resources.PEOPLE:
 
                 var person = await _personService.GetByIdAsync(id);
                 if (person is null) return null;
@@ -29,7 +30,7 @@ public class ResourceDetailsService(
                     PageTitle = person.Name
                 };
 
-            case "planets":
+            case Resources.PLANETS:
 
                 var planet = await planetService.GetByIdAsync(id);
                 if (planet is null) return null;
@@ -40,7 +41,7 @@ public class ResourceDetailsService(
                     PageTitle = planet.Name
                 };
 
-            case "films":
+            case Resources.FILMS:
                 var film = await filmService.GetByIdAsync(id);
                 return new ResourceDetailsResult
                 {
@@ -49,7 +50,7 @@ public class ResourceDetailsService(
                     PageTitle = film.Title,
                 };
 
-            case "species":
+            case Resources.SPECIES:
                 var specie = await specieService.GetByIdAsync(id);
                 return new ResourceDetailsResult
                 {
@@ -58,7 +59,7 @@ public class ResourceDetailsService(
                     PageTitle = specie.Name,
                 };
 
-            case "vehicles":
+            case Resources.VEHICLES:
                 var vehicle = await vehicleService.GetByIdAsync(id);
                 return new ResourceDetailsResult
                 {

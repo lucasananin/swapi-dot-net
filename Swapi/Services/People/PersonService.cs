@@ -1,3 +1,4 @@
+using Swapi.Constants;
 using Swapi.Models.Api;
 using Swapi.Models.ViewModels;
 
@@ -12,7 +13,7 @@ public class PersonService(
     {
         try
         {
-            var person = await httpClient.GetFromJsonAsync<PersonApiModel>($"people/{id}");
+            var person = await httpClient.GetFromJsonAsync<PersonApiModel>($"{Resources.PEOPLE}/{id}");
 
             if (person is null)
             {
@@ -20,7 +21,7 @@ public class PersonService(
                 return null;
             }
 
-            var isFavorite = await favoriteService.IsFavoriteAsync("people", id);
+            var isFavorite = await favoriteService.IsFavoriteAsync(Resources.PEOPLE, id);
 
             return new PersonDetailsViewModel
             {

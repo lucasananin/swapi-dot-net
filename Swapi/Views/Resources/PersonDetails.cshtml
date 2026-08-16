@@ -1,3 +1,4 @@
+@using Swapi.Constants
 @model Swapi.Models.ViewModels.PersonDetailsViewModel
 
 @{
@@ -32,16 +33,5 @@
 
 <partial name="_FavoriteButton" model="@Model" view-data='new ViewDataDictionary(ViewData)
          {
-             ["Resource"] = "people"
+             ["Resource"] = Resources.PEOPLE
          }' />
-
-@* <form asp-controller="Resources" asp-action="ToggleFavorite" method="post">
-
-    <input type="hidden" name="resource" value="people" />
-    <input type="hidden" name="id" value="@Model.Id" />
-
-    <button type="submit">
-        @(Model.IsFavorite ? "★ Remove from favorites" : "☆ Add to favorites")
-    </button>
-
-</form> *@

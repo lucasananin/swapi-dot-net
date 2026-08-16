@@ -1,3 +1,4 @@
+@using Swapi.Constants
 @model Swapi.Models.ViewModels.FilmDetailsViewModel
 
 @{
@@ -27,5 +28,5 @@
 
 <partial name="_FavoriteButton" model="@Model" view-data='new ViewDataDictionary(ViewData)
          {
-             ["Resource"] = "films"
+             ["Resource"] = Resources.FILMS
          }' />

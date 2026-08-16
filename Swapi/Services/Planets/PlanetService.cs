@@ -1,3 +1,4 @@
+using Swapi.Constants;
 using Swapi.Models.Api;
 using Swapi.Models.ViewModels;
 
@@ -12,7 +13,7 @@ public class PlanetService(
     {
         try
         {
-            var _planet = await httpClient.GetFromJsonAsync<PlanetApiModel>($"planets/{id}");
+            var _planet = await httpClient.GetFromJsonAsync<PlanetApiModel>($"{Resources.PLANETS}/{id}");
 
             if (_planet is null)
             {
@@ -20,7 +21,7 @@ public class PlanetService(
                 return null;
             }
 
-            var isFavorite = await favoriteService.IsFavoriteAsync("planets", id);
+            var isFavorite = await favoriteService.IsFavoriteAsync(Resources.PLANETS, id);
 
             return new PlanetDetailsViewModel
             {

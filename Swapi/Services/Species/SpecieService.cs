@@ -1,3 +1,4 @@
+using Swapi.Constants;
 using Swapi.Models.Api;
 using Swapi.Models.ViewModels;
 
@@ -9,9 +10,9 @@ public class SpecieService(
 {
     public async Task<SpecieDetailsViewModel> GetByIdAsync(int id)
     {
-        var specie = await httpClient.GetFromJsonAsync<SpecieApiModel>($"species/{id}");
-        var isFavorite = await favoriteService.IsFavoriteAsync("species", id);
-        
+        var specie = await httpClient.GetFromJsonAsync<SpecieApiModel>($"{Resources.SPECIES}/{id}");
+        var isFavorite = await favoriteService.IsFavoriteAsync(Resources.SPECIES, id);
+
         return new SpecieDetailsViewModel
         {
             Id = id,

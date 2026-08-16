@@ -24,7 +24,7 @@ public class SwapiService(
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
                 var stream = await httpClient.GetStreamAsync(resource);
 
-                if (resource == "films")
+                if (resource == Resources.FILMS)
                 {
                     var films = await JsonSerializer.DeserializeAsync<List<TitledApiResource>>(stream);
                     return films?.Select(
@@ -88,7 +88,7 @@ public class SwapiService(
         var response = await httpClient.GetAsync($"{resource}/{id}");
         if (!response.IsSuccessStatusCode) return null;
 
-        if (resource == "films")
+        if (resource == Resources.FILMS)
         {
             var apiModel = await response.Content.ReadFromJsonAsync<TitledApiResource>();
             var item = new ResourceItem
@@ -128,7 +128,7 @@ public class SwapiService(
 
     public async Task<PersonDetailsViewModel?> GetPersonAsync(int id)
     {
-        var person = await httpClient.GetFromJsonAsync<PersonApiModel>($"people/{id}");
+        var person = await httpClient.GetFromJsonAsync<PersonApiModel>($"{Resources.PEOPLE}/{id}");
 
         if (person is null)
             return null;
@@ -147,12 +147,12 @@ public class SwapiService(
     {
         var displayName = resource switch
         {
-            "people" => "Characters",
-            "planets" => "Planets",
-            "films" => "Films",
-            "species" => "Species",
-            "starships" => "Starships",
-            "vehicles" => "Vehicles",
+            Resources.PEOPLE => "Characters",
+            Resources.PLANETS => "Planets",
+            Resources.FILMS => "Films",
+            Resources.SPECIES => "Species",
+            Resources.STARSHIPS => "Starships",
+            Resources.VEHICLES => "Vehicles",
             _ => resource
         };
 
