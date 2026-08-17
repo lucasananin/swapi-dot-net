@@ -77,10 +77,12 @@ public class ResourcesController(
 
             if (resource is null) continue;
 
+            var resourceType = await _swapiService.GetResourceDisplayNameAsync(favorite.ResourceType);
+
             items.Add(new FavoriteItemViewModel
             {
                 Id = favorite.ResourceId,
-                Resource = favorite.ResourceType,
+                Resource = resourceType,
                 Name = resource.DisplayName
             });
         }
