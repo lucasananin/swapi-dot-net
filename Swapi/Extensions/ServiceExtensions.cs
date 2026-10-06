@@ -14,36 +14,15 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddSwapiServices(this IServiceCollection services)
     {
-        const string SWAPI_LINK = "https://swapi.info/api/";
+        const string SWAPI_URL = "https://swapi.info/api/";
 
-        services.AddHttpClient<ISwapiService, SwapiService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<IPersonService, PersonService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<IPlanetService, PlanetService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<IFilmService, FilmService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<ISpecieService, SpecieService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<IVehicleService, VehicleService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
-        services.AddHttpClient<IStarshipService, StarshipService>(client =>
-        {
-            client.BaseAddress = new Uri(SWAPI_LINK);
-        });
+        services.AddHttpClient<ISwapiService, SwapiService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<IPersonService, PersonService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<IPlanetService, PlanetService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<IFilmService, FilmService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<ISpecieService, SpecieService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<IVehicleService, VehicleService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
+        services.AddHttpClient<IStarshipService, StarshipService>(client => { client.BaseAddress = new Uri(SWAPI_URL); });
 
         return services;
     }
